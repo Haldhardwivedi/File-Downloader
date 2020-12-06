@@ -58,13 +58,10 @@ def download(url,thread_count):
         t.start()
         threadlist.append(t)
         
-    # main_thread = threading.current_thread()
-    # for t in threading.enumerate():
-    #     if t is main_thread:
-    #         continue
-    #     t.join()
+
     for t in threadlist:
         t.join()
+    histroy[filename] = 'downloaded'
 
     print("file " + str(filename)+" size = "+str(size/(1024))+"kb downloaded time taken = " + str(round(time.time()-start_time,3)) +"s")
 
