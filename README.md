@@ -1,4 +1,4 @@
-# FAST-file-downloader by
+# File-Downloader by
 ### Dhruv sawarkar CED18I017
 ### Haldhar Dwivedi CED18I022
 ### Harini.V CED18I023
