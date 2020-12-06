@@ -10,6 +10,7 @@ import time
 
 n=15
 
+
 histroy = dict()
 def part_downloader(start,end,url,filename):
 
@@ -25,8 +26,9 @@ def part_downloader(start,end,url,filename):
 def download(url,thread_count):
 
     r = requests.head(url)
-    #filename = str(str(url).split('/')[-1])
     filename =file_name_bfr_click.get()
+    if(len(filename) == 0):
+        filename = str(str(url).split('/')[-1])
     print("called download for ",filename)
     try:
         size = int(r.headers['content-length'])
@@ -63,7 +65,7 @@ def download(url,thread_count):
         t.join()
     histroy[filename] = 'downloaded'
 
-    print("file " + str(filename)+" size = "+str(size/(1024))+"kb downloaded time taken = " + str(round(time.time()-start_time,3)) +"s")
+    print("file " + str(filename)+" size = "+str(size/(1024))+"kb threads used "+str(thread_count)+ " downloaded time taken = " + str(round(time.time()-start_time,3)) +"s")
 
 #runner is here 
 def onClick() :
@@ -76,6 +78,7 @@ def newThread():
     t.start()
 
 def Exit():
+    print("Exiting...")
     win.destroy()
     sys.exit()
 
