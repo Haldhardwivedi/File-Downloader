@@ -4,3 +4,6 @@
 ### Harini.V CED18I023
 ### Vijay Meena CED18I057
 ### Tejashree COE18B016
+
+# GUI 
+![gui 1 ](gui.png)
