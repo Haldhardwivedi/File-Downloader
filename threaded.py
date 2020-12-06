@@ -1,25 +1,25 @@
-from tkinter import ttk
 from tkinter import *
-import os
-from tkinter import messagebox as m_box
-import re
 import requests
 import threading
 import time
 
-
+# n is the number of threads being used
 n=15
 
+#history stores the state of files 
+#being downloaded or downloading
+history = dict()
 
-histroy = dict()
-
-#part_downloader function accepts the start and end byte index
+#part_downloader function accepts the start 
+# and end byte index
 def part_downloader(start,end,url,filename):
 
-    #file_headers contains dictionary with the range of the bytes specified to be downloaded
+    #file_headers contains dictionary with 
+    #the range of the bytes specified to be downloaded
     file_headers = {'Range':'bytes=%d-%d'%(start,end)}
     
-    #request to get the response object  with specified headers
+    #request to get the response object  
+    #with specified headers
     r = requests.get(url,headers=file_headers,stream=True)
 
     #open the file for reading and writing in binary mode
@@ -32,11 +32,14 @@ def part_downloader(start,end,url,filename):
 
 def download(url,thread_count):
 
-    #send a head request to the url and save it in r which is the response object
+    #send a head request to the url and save it 
+    # in r which is the response object
     r = requests.head(url) 
 
-    filename =file_name_bfr_click.get()#get the filename from filename entry widget
-    #if the filename entry widget was left empty then use the default name of file 
+    filename =file_name_bfr_click.get()
+    #get the filename from filename entry widget
+    #if the filename entry widget was left empty
+    #  then use the default name of file 
     if(len(filename) == 0):
         filename = str(str(url).split('/')[-1])
     print("called download for",filename,"from",url)
@@ -44,18 +47,18 @@ def download(url,thread_count):
     #from the headers get the content-length 
     try:
         size = int(r.headers['content-length'])
-        print("File size recieved is ",str(size/1024)," KB")
+        print("File size recieved is ",str(round(size/1024,3))," KB")
     except:
         print("Invalid url or File cannot be downloaded")
         return
     #check if we are not downloading the same file under the same name 
     #so that we dont have any conflicts 
     try:
-        if histroy[filename] is 'downloading':
+        if history[filename] == 'downloading':
             print("File %s is already being downloaded"%(filename))
             return
     except:
-        histroy[filename] = 'downloading'
+        history[filename] = 'downloading'
     
     #calculate the fraction of bytes which we need for each thread
     fraction = int(size/int(thread_count))
@@ -78,7 +81,8 @@ def download(url,thread_count):
         end = start + fraction
         #create thread with part_downloader function and 
         #give the url and the parameters for the file headers to download
-        t = threading.Thread(target=part_downloader,kwargs={'start':start,'end':end,'url':url,'filename':filename})
+        t = threading.Thread(target=part_downloader,
+        kwargs={'start':start,'end':end,'url':url,'filename':filename})
         t.start()
         threadlist.append(t)
         
@@ -86,10 +90,11 @@ def download(url,thread_count):
     for t in threadlist:
         t.join()
     #marks the file as downloaded
-    histroy[filename] = 'downloaded'
+    history[filename] = 'downloaded'
 
     print("file " + str(filename)+" size = "+str(size/(1024))+"kb threads used",
-    str(thread_count)+ " downloaded time taken = " + str(round(time.time()-start_time,3)) +"s")
+    str(thread_count)+ " downloaded time taken =",
+    str(round(time.time()-start_time,3)),"s")
 
 #runner is here 
 #get the url from entry and give it to download function
@@ -120,24 +125,25 @@ win.minsize(500,360)
 win.maxsize(500,360)
 
 #Create inner Frame for inputs and button
-frame = ttk.LabelFrame(win, width=290)
+frame = LabelFrame(win, width=290)
 frame.pack(padx=30, pady=90)
 
-urlLB = ttk.Label(frame, text="Enter The File URL : ")
+urlLB = Label(frame, text="Enter The File URL : ")
 urlLB.grid(row=0, column=0,sticky=W)
 url = StringVar()
 #Entry widget for url
-url_entry = ttk.Entry(frame, width=50, textvariable=url)
+url_entry = Entry(frame, width=50, textvariable=url)
 url_entry.grid(row=1, columnspan=4, padx=2, pady=3)
 
-fileNameLB = ttk.Label(frame, text="Enter The File Name : ")
+fileNameLB = Label(frame, text="Enter The File Name : ")
 fileNameLB.grid(row=2, column=0,sticky=W)
 
 file_name_bfr_click = StringVar()
-file_name = ttk.Entry(frame, width=50, textvariable=file_name_bfr_click)
+file_name = Entry(frame, width=50, textvariable=file_name_bfr_click)
 file_name.grid(row=3, columnspan=4, padx=2, pady=3)
-#Create Download Button with command newThread which creates new thread and starts downloading the file from url
-DownloadBT = ttk.Button(frame, width=30, text="Download File", command=onClick)
+#Create Download Button with command newThread which creates
+# new thread and starts downloading the file from url
+DownloadBT = Button(frame, width=30, text="Download File", command=onClick)
 DownloadBT.grid(row=4,column=0)
 
 #Button for Exiting the application
