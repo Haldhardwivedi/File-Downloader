@@ -7,5 +7,5 @@
 
 # GUI 
 ![gui 1 ](gui.png)
-![gui 2 ](ss-1.png)
-![gui 3 ](ss-2.png)
+![gui 2 ](Output-SS/ss-1.png)
+![gui 3 ](Output-SS/ss-2.png)
